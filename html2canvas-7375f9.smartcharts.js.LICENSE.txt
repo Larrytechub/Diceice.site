@@ -1,0 +1,1 @@
+/*! For license information please see html2canvas-7375f9.smartcharts.js.LICENSE.txt */
