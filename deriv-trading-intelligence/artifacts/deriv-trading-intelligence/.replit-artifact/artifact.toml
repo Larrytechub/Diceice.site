@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Deriv Trading Intelligence"
+description = "A paper-first Deriv trading workspace with AI market scanning, risk-aware bulk trade planning, and DTrader-style technical analysis for active traders."
+version = "1.0.0"
+id = "artifacts/deriv-trading-intelligence"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21848
+
+[services.development]
+run = "pnpm --filter @workspace/deriv-trading-intelligence run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/deriv-trading-intelligence", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/deriv-trading-intelligence/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21848"
+BASE_PATH = "/"
