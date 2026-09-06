@@ -1,0 +1,1 @@
+# Deriv Trading Intelligence\n\nPaper-first Deriv trading workspace with AI-style market scanning, risk-aware bulk trading, DTrader-style analysis, and selectable login loaders.\n\nThis release is PAPER-ONLY. Market snapshots are deterministic and simulated, and no live Deriv orders are placed.\n
