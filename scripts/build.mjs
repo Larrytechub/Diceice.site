@@ -39,4 +39,5 @@ for (const name of files) {
 }
 
 await writeFile(join(output, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
+await copyFile(join(root, "src/deriv-config.js"), join(output, "deriv-config.js"));
 console.log("Built " + files.length + " files into dist/ and wrote dist/manifest.json");
