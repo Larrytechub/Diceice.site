@@ -23,6 +23,10 @@ Use the integration guide for the host application setup and chart configuration
 - [Language support](LANGUAGE_SUPPORT.md)
 - [Language composition](LANGUAGE_COMPOSITION.md)
 
+## Repository layout
+
+Generated SmartCharts assets intentionally remain at the repository root so existing host applications can keep their current paths. See the [repository structure map](docs/REPOSITORY_STRUCTURE.md) for the role of each directory and the maintenance rules.
+
 ## Localization
 
 The repository contains locale bundles for Arabic, Bengali, Chinese (simplified and traditional), Dutch, English messages, French, German, Indonesian, Italian, Khmer, Korean, Mongolian, Polish, Portuguese, Russian, Sinhala, Spanish, Swahili, Thai, Turkish, Uzbek, and Vietnamese.
@@ -31,7 +35,7 @@ The documented translation system covers chart types, technical indicators, trad
 
 ## Source and generated assets
 
-The root-level SmartCharts files are bundled assets intended to be consumed by a web application. The `src/` directory contains integration configuration and language source files. When changing source data, keep generated bundles and their locale naming conventions consistent.
+The root-level SmartCharts files are bundled assets intended to be consumed by a web application. The `src/` directory contains integration configuration and language source files. When changing source data, keep generated bundles and their locale naming conventions consistent. See the [repository structure map](docs/REPOSITORY_STRUCTURE.md) for the full layout.
 
 ## Deriv configuration
 
