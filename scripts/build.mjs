@@ -5,6 +5,10 @@ import { join, resolve } from "node:path";
 const root = resolve(process.cwd());
 const output = join(root, "dist");
 const assetPattern = /\.(?:js|css|svg|txt)$/i;
+const derivConfig = await readFile(join(root, "src/deriv-config.js"), "utf8");
+const appIdMatch = derivConfig.match(/export const DERIV_APP_ID = "([^"]+)";/);
+if (!appIdMatch) throw new Error("DERIV_APP_ID is missing from src/deriv-config.js.");
+const derivAppId = appIdMatch[1];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
@@ -28,8 +32,14 @@ const manifest = { version: 1, source: "repository root", files: [] };
 for (const name of files) {
   const source = join(root, name);
   const destination = join(output, name);
-  const contents = await readFile(source);
-  await copyFile(source, destination);
+  const original = await readFile(source);
+  const contents = name === "index.html"
+    ? Buffer.from(original.toString("utf8").replace(
+        "wss://ws.derivws.com/websockets/v3?app_id=3396",
+        `wss://ws.derivws.com/websockets/v3?app_id=${derivAppId}`
+      ))
+    : original;
+  await writeFile(destination, contents);
   const fileInfo = await stat(source);
   manifest.files.push({
     path: name,
