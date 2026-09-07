@@ -27,6 +27,16 @@ Use the integration guide for the host application setup and chart configuration
 
 Generated SmartCharts assets intentionally remain at the repository root so existing host applications can keep their current paths. See the [repository structure map](docs/REPOSITORY_STRUCTURE.md) for the role of each directory and the maintenance rules.
 
+## Development and build
+
+The repository uses Node.js 18 or newer and has no external npm dependencies:
+
+    npm run check
+    npm run build
+    npm run clean
+
+`check` validates that the required bundles and locale assets are present. `build` packages the checked-in root assets into `dist/` and writes a deterministic `dist/manifest.json` with file sizes and SHA-256 hashes. `dist/` is ignored because it is generated output. The original compiler/source toolchain is not included in this repository.
+
 ## Localization
 
 The repository contains locale bundles for Arabic, Bengali, Chinese (simplified and traditional), Dutch, English messages, French, German, Indonesian, Italian, Khmer, Korean, Mongolian, Polish, Portuguese, Russian, Sinhala, Spanish, Swahili, Thai, Turkish, Uzbek, and Vietnamese.
