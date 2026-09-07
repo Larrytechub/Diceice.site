@@ -4,6 +4,7 @@ SmartCharts assets and localization resources for multilingual financial chartin
 
 ## What is included
 
+- `index.html` — the public landing page served by Vercel.
 - `smartcharts.js` and `smartcharts.css` — the main bundled charting assets.
 - Locale bundles for translated chart labels, indicators, controls, and market messages.
 - `html2canvas` and `resize-observer-polyfill` browser utilities.
@@ -23,6 +24,10 @@ Use the integration guide for the host application setup and chart configuration
 - [Language support](LANGUAGE_SUPPORT.md)
 - [Language composition](LANGUAGE_COMPOSITION.md)
 
+## Website deployment
+
+The repository includes a static landing page and `vercel.json` configuration. Vercel runs `npm run build`, serves the generated `dist/` directory, and receives an `index.html` entrypoint instead of a 404 at `/`.
+
 ## Repository layout
 
 Generated SmartCharts assets intentionally remain at the repository root so existing host applications can keep their current paths. See the [repository structure map](docs/REPOSITORY_STRUCTURE.md) for the role of each directory and the maintenance rules.
@@ -35,7 +40,7 @@ The repository uses Node.js 18 or newer and has no external npm dependencies:
     npm run build
     npm run clean
 
-`check` validates that the required bundles and locale assets are present. `build` packages the checked-in root assets into `dist/` and writes a deterministic `dist/manifest.json` with file sizes and SHA-256 hashes. `dist/` is ignored because it is generated output. The original compiler/source toolchain is not included in this repository.
+`check` validates that the required bundles and locale assets are present. `build` packages the checked-in root assets and landing page into `dist/` and writes a deterministic `dist/manifest.json` with file sizes and SHA-256 hashes. `dist/` is ignored because it is generated output. The original compiler/source toolchain is not included in this repository.
 
 ## Localization
 
@@ -53,7 +58,7 @@ The root-level SmartCharts files are bundled assets intended to be consumed by a
 
 ## Repository status
 
-This repository currently focuses on charting assets, translations, and integration documentation rather than a standalone application shell.
+This repository contains the public landing page, charting assets, translations, and integration documentation.
 
 ## License
 

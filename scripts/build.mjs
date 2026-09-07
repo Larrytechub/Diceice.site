@@ -18,10 +18,14 @@ const assets = entries
 if (!assets.includes("smartcharts.js") || !assets.includes("smartcharts.css")) {
   throw new Error("Required SmartCharts assets are missing from the repository root.");
 }
+if (!entries.some((entry) => entry.isFile() && entry.name === "index.html")) {
+  throw new Error("index.html is required for the Vercel landing page.");
+}
 
+const files = [...assets, "index.html"];
 const manifest = { version: 1, source: "repository root", files: [] };
 
-for (const name of assets) {
+for (const name of files) {
   const source = join(root, name);
   const destination = join(output, name);
   const contents = await readFile(source);
@@ -35,4 +39,4 @@ for (const name of assets) {
 }
 
 await writeFile(join(output, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
-console.log("Built " + assets.length + " assets into dist/ and wrote dist/manifest.json");
+console.log("Built " + files.length + " files into dist/ and wrote dist/manifest.json");
