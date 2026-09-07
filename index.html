@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Diceice.site — multilingual SmartCharts assets for financial charting and technical analysis." />
   <title>Diceice.site — SmartCharts</title>
+  <link rel="stylesheet" href="/smartcharts.css" />
   <style>
     :root { color-scheme: dark; --bg: #08111f; --panel: #101d31; --line: #263957; --text: #edf4ff; --muted: #9eb0ca; --accent: #6ee7c8; --accent-2: #8aa7ff; }
     * { box-sizing: border-box; }
@@ -12,27 +13,26 @@
     a { color: inherit; }
     .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
     header { display: flex; align-items: center; justify-content: space-between; padding: 28px 0; }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 750; letter-spacing: -.02em; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 750; letter-spacing: -.02em; text-decoration: none; }
     .mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: #07131f; background: linear-gradient(135deg, var(--accent), var(--accent-2)); font-weight: 900; }
     nav { display: flex; gap: 20px; color: var(--muted); font-size: 14px; }
     nav a { text-decoration: none; }
     nav a:hover { color: var(--text); }
-    .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; padding: 82px 0 88px; }
+    .hero { display: grid; grid-template-columns: .85fr 1.15fr; gap: 42px; align-items: center; padding: 72px 0 76px; }
     .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: .14em; font-size: 12px; font-weight: 800; }
-    h1 { max-width: 720px; margin: 14px 0 20px; font-size: clamp(42px, 7vw, 76px); line-height: .98; letter-spacing: -.065em; }
-    .lede { max-width: 620px; margin: 0; color: var(--muted); font-size: 19px; line-height: 1.65; }
+    h1 { max-width: 620px; margin: 14px 0 20px; font-size: clamp(42px, 7vw, 72px); line-height: .98; letter-spacing: -.065em; }
+    .lede { max-width: 560px; margin: 0; color: var(--muted); font-size: 18px; line-height: 1.65; }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
     .button { display: inline-flex; align-items: center; gap: 8px; padding: 13px 17px; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14px; }
     .button.primary { border-color: transparent; color: #06131d; background: var(--accent); }
     .button:hover { transform: translateY(-1px); }
-    .chart-card { position: relative; padding: 22px; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(155deg, rgba(26, 49, 89, .82), rgba(13, 25, 43, .9)); box-shadow: 0 24px 80px rgba(0, 0, 0, .25); }
-    .chart-top { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; }
-    .chart-top strong { color: var(--text); font-size: 18px; }
-    .chart { display: flex; align-items: end; gap: 7px; height: 190px; padding: 26px 4px 12px; border-bottom: 1px solid #365074; background: repeating-linear-gradient(to top, transparent 0 46px, rgba(139, 167, 215, .12) 47px 48px); }
-    .bar { width: 100%; border-radius: 5px 5px 2px 2px; background: linear-gradient(to top, var(--accent-2), var(--accent)); }
-    .bar:nth-child(1) { height: 35%; } .bar:nth-child(2) { height: 48%; } .bar:nth-child(3) { height: 42%; } .bar:nth-child(4) { height: 62%; } .bar:nth-child(5) { height: 55%; } .bar:nth-child(6) { height: 74%; } .bar:nth-child(7) { height: 68%; } .bar:nth-child(8) { height: 88%; } .bar:nth-child(9) { height: 78%; } .bar:nth-child(10) { height: 96%; }
-    .metrics { display: flex; justify-content: space-between; padding-top: 15px; color: var(--muted); font-size: 12px; }
-    .metrics strong { display: block; margin-top: 4px; color: var(--text); font-size: 15px; }
+    .chart-card { min-height: 450px; padding: 16px; border: 1px solid var(--line); border-radius: 24px; background: rgba(16, 29, 49, .84); box-shadow: 0 24px 80px rgba(0, 0, 0, .25); overflow: hidden; }
+    .chart-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 8px 14px; }
+    .chart-header strong { font-size: 18px; }
+    .chart-status { color: var(--muted); font-size: 12px; }
+    #smartchart-root { min-height: 390px; height: 390px; border-radius: 14px; overflow: hidden; background: #0c1728; }
+    #smartchart-root > div { height: 100%; }
+    .chart-fallback { display: grid; place-items: center; min-height: 390px; padding: 24px; color: var(--muted); text-align: center; line-height: 1.6; }
     .section { padding: 20px 0 92px; }
     .section h2 { margin: 0 0 12px; font-size: 28px; letter-spacing: -.035em; }
     .section-intro { margin: 0 0 28px; color: var(--muted); line-height: 1.6; }
@@ -43,7 +43,8 @@
     .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
     .tag { padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; color: #c9d7ee; font-size: 12px; }
     footer { padding: 28px 0 42px; border-top: 1px solid rgba(38, 57, 87, .7); color: var(--muted); font-size: 13px; }
-    @media (max-width: 780px) { nav { display: none; } .hero { grid-template-columns: 1fr; gap: 34px; padding: 54px 0 70px; } .grid { grid-template-columns: 1fr; } h1 { font-size: clamp(44px, 15vw, 68px); } }
+    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; gap: 34px; padding: 54px 0 70px; } }
+    @media (max-width: 780px) { nav { display: none; } .grid { grid-template-columns: 1fr; } h1 { font-size: clamp(44px, 15vw, 68px); } }
   </style>
 </head>
 <body>
@@ -64,10 +65,9 @@
             <a class="button" href="https://github.com/Larrytechub/Diceice.site/blob/main/docs/SMARTCHARTS_INTEGRATION.md">Read integration docs</a>
           </div>
         </div>
-        <div class="chart-card" aria-label="Illustration of a rising chart">
-          <div class="chart-top"><span>SMARTCHARTS / MARKET VIEW</span><strong>+24.8%</strong></div>
-          <div class="chart"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
-          <div class="metrics"><span>Trend<strong>Positive</strong></span><span>Indicators<strong>100+</strong></span><span>Locales<strong>20+</strong></span></div>
+        <div class="chart-card">
+          <div class="chart-header"><strong>R_100 · Live market chart</strong><span class="chart-status" id="chart-status">Connecting to market data…</span></div>
+          <div id="smartchart-root"><div class="chart-fallback">Loading the live SmartChart…</div></div>
         </div>
       </section>
 
@@ -90,5 +90,118 @@
 
     <footer>Diceice.site · SmartCharts assets and localization resources</footer>
   </div>
+
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/react-transition-group@4.4.5/dist/react-transition-group.js"></script>
+  <script src="https://unpkg.com/moment@2.30.1/min/moment.min.js"></script>
+  <script src="/smartcharts.js"></script>
+  <script>
+    (function () {
+      var status = document.getElementById("chart-status");
+      var root = document.getElementById("smartchart-root");
+      var pending = new Map();
+      var streamsByRequest = new Map();
+      var streamsByCallback = new Map();
+      var nextRequestId = 1;
+      var socket;
+      var socketReady = new Promise(function (resolve, reject) {
+        socket = new WebSocket("wss://ws.derivws.com/websockets/v3?app_id=3396");
+        socket.addEventListener("open", resolve, { once: true });
+        socket.addEventListener("error", reject, { once: true });
+      });
+
+      function setStatus(message, isError) {
+        status.textContent = message;
+        if (isError) status.style.color = "#ff9f9f";
+      }
+
+      function sendRequest(request) {
+        return socketReady.then(function () {
+          return new Promise(function (resolve, reject) {
+            var reqId = nextRequestId++;
+            pending.set(reqId, { resolve: resolve, reject: reject });
+            socket.send(JSON.stringify(Object.assign({}, request, { req_id: reqId })));
+          });
+        });
+      }
+
+      socket.addEventListener("message", function (event) {
+        var response;
+        try { response = JSON.parse(event.data); } catch (error) { return; }
+        var reqId = response.echo_req && response.echo_req.req_id;
+        var stream = reqId ? streamsByRequest.get(reqId) : null;
+        if (!stream && response.subscription && response.subscription.id) {
+          streamsByCallback.forEach(function (item) {
+            if (item.subscriptionId === response.subscription.id) stream = item;
+          });
+        }
+        if (stream) {
+          if (response.subscription && response.subscription.id) stream.subscriptionId = response.subscription.id;
+          stream.callback(response);
+          return;
+        }
+        var pendingRequest = reqId ? pending.get(reqId) : null;
+        if (!pendingRequest) return;
+        pending.delete(reqId);
+        if (response.error) pendingRequest.reject(new Error(response.error.message || "Deriv API error"));
+        else pendingRequest.resolve(response);
+      });
+
+      socket.addEventListener("close", function () { setStatus("Market data connection closed", true); });
+      socketReady.catch(function () { setStatus("Market data is unavailable right now", true); });
+
+      function requestAPI(request) { return sendRequest(request); }
+
+      function requestSubscribe(request, callback) {
+        return socketReady.then(function () {
+          var reqId = nextRequestId++;
+          var stream = { callback: callback, subscriptionId: null };
+          streamsByRequest.set(reqId, stream);
+          streamsByCallback.set(callback, stream);
+          socket.send(JSON.stringify(Object.assign({}, request, { subscribe: 1, req_id: reqId })));
+        });
+      }
+
+      function requestForget(request, callback) {
+        var stream = streamsByCallback.get(callback);
+        if (!stream) return Promise.resolve();
+        streamsByCallback.delete(callback);
+        if (stream.subscriptionId) return sendRequest({ forget: stream.subscriptionId });
+        return Promise.resolve();
+      }
+
+      function boot() {
+        var library = window.smartcharts;
+        if (!library || !library.SmartChart || !window.React || !window.ReactDOM) {
+          setStatus("SmartChart bundle could not be loaded", true);
+          root.innerHTML = '<div class="chart-fallback">The chart library could not be loaded. The documentation links below are still available.</div>';
+          return;
+        }
+        if (library.setSmartChartsPublicPath) library.setSmartChartsPublicPath("/");
+        try {
+          var chart = React.createElement(library.SmartChart, {
+            symbol: "R_100",
+            granularity: 60,
+            chartType: "mountain",
+            requestAPI: requestAPI,
+            requestSubscribe: requestSubscribe,
+            requestForget: requestForget,
+            isConnectionOpened: true,
+            isAnimationEnabled: true,
+            onMessage: function (message) { if (message && message.text) setStatus(message.text, message.type === "error"); }
+          });
+          ReactDOM.render(chart, root);
+          setStatus("Live market data");
+        } catch (error) {
+          setStatus("Chart could not be initialized", true);
+          root.innerHTML = '<div class="chart-fallback">The live chart could not be initialized. Check the browser console for details.</div>';
+        }
+      }
+
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+      else boot();
+    }());
+  </script>
 </body>
 </html>
