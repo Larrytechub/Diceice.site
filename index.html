@@ -66,8 +66,8 @@
           </div>
         </div>
         <div class="chart-card">
-          <div class="chart-header"><strong>R_100 · Live market chart</strong><span class="chart-status" id="chart-status">Connecting to market data…</span></div>
-          <div id="smartchart-root"><div class="chart-fallback">Loading the live SmartChart…</div></div>
+          <div class="chart-header"><strong>R_100 · Live market chart</strong><span class="chart-status" id="chart-status">Loads when visible</span></div>
+          <div id="smartchart-root"><div class="chart-fallback">The live chart will load when visible…</div></div>
         </div>
       </section>
 
@@ -91,11 +91,11 @@
     <footer>Diceice.site · SmartCharts assets and localization resources</footer>
   </div>
 
-  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/react-transition-group@4.4.5/dist/react-transition-group.js"></script>
-  <script src="https://unpkg.com/moment@2.30.1/min/moment.min.js"></script>
-  <script src="/smartcharts.js"></script>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js" defer></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js" defer></script>
+  <script src="https://unpkg.com/react-transition-group@4.4.5/dist/react-transition-group.js" defer></script>
+  <script src="https://unpkg.com/moment@2.30.1/min/moment.min.js" defer></script>
+  <script src="/smartcharts.js" defer></script>
   <script>
     (function () {
       var status = document.getElementById("chart-status");
@@ -104,19 +104,53 @@
       var streamsByRequest = new Map();
       var streamsByCallback = new Map();
       var nextRequestId = 1;
-      var socket;
-      var socketReady = new Promise(function (resolve, reject) {
-        socket = new WebSocket("wss://ws.derivws.com/websockets/v3?app_id=3396");
-        socket.addEventListener("open", resolve, { once: true });
-        socket.addEventListener("error", reject, { once: true });
-      });
+      var socket = null;
+      var socketReady = null;
+      var started = false;
 
       function setStatus(message, isError) {
         status.textContent = message;
         if (isError) status.style.color = "#ff9f9f";
       }
 
+      function startConnection() {
+        if (started) return;
+        started = true;
+        setStatus("Connecting to market data…");
+        socketReady = new Promise(function (resolve, reject) {
+          socket = new WebSocket("wss://ws.derivws.com/websockets/v3?app_id=3396");
+          socket.addEventListener("open", resolve, { once: true });
+          socket.addEventListener("error", reject, { once: true });
+        });
+
+        socket.addEventListener("message", function (event) {
+          var response;
+          try { response = JSON.parse(event.data); } catch (error) { return; }
+          var reqId = response.echo_req && response.echo_req.req_id;
+          var stream = reqId ? streamsByRequest.get(reqId) : null;
+          if (!stream && response.subscription && response.subscription.id) {
+            streamsByCallback.forEach(function (item) {
+              if (item.subscriptionId === response.subscription.id) stream = item;
+            });
+          }
+          if (stream) {
+            if (response.subscription && response.subscription.id) stream.subscriptionId = response.subscription.id;
+            stream.callback(response);
+            return;
+          }
+          var pendingRequest = reqId ? pending.get(reqId) : null;
+          if (!pendingRequest) return;
+          pending.delete(reqId);
+          if (response.error) pendingRequest.reject(new Error(response.error.message || "Deriv API error"));
+          else pendingRequest.resolve(response);
+        });
+
+        socket.addEventListener("close", function () { setStatus("Market data connection closed", true); });
+        socketReady.catch(function () { setStatus("Market data is unavailable right now", true); });
+      }
+
       function sendRequest(request) {
+        startConnection();
         return socketReady.then(function () {
           return new Promise(function (resolve, reject) {
             var reqId = nextRequestId++;
@@ -126,34 +160,10 @@
         });
       }
 
-      socket.addEventListener("message", function (event) {
-        var response;
-        try { response = JSON.parse(event.data); } catch (error) { return; }
-        var reqId = response.echo_req && response.echo_req.req_id;
-        var stream = reqId ? streamsByRequest.get(reqId) : null;
-        if (!stream && response.subscription && response.subscription.id) {
-          streamsByCallback.forEach(function (item) {
-            if (item.subscriptionId === response.subscription.id) stream = item;
-          });
-        }
-        if (stream) {
-          if (response.subscription && response.subscription.id) stream.subscriptionId = response.subscription.id;
-          stream.callback(response);
-          return;
-        }
-        var pendingRequest = reqId ? pending.get(reqId) : null;
-        if (!pendingRequest) return;
-        pending.delete(reqId);
-        if (response.error) pendingRequest.reject(new Error(response.error.message || "Deriv API error"));
-        else pendingRequest.resolve(response);
-      });
-
-      socket.addEventListener("close", function () { setStatus("Market data connection closed", true); });
-      socketReady.catch(function () { setStatus("Market data is unavailable right now", true); });
-
       function requestAPI(request) { return sendRequest(request); }
 
       function requestSubscribe(request, callback) {
+        startConnection();
         return socketReady.then(function () {
           var reqId = nextRequestId++;
           var stream = { callback: callback, subscriptionId: null };
@@ -172,6 +182,7 @@
       }
 
       function boot() {
+        startConnection();
         var library = window.smartcharts;
         if (!library || !library.SmartChart || !window.React || !window.ReactDOM) {
           setStatus("SmartChart bundle could not be loaded", true);
@@ -199,8 +210,22 @@
         }
       }
 
-      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
-      else boot();
+      function loadWhenVisible() {
+        if (!("IntersectionObserver" in window)) {
+          boot();
+          return;
+        }
+        var observer = new IntersectionObserver(function (entries) {
+          if (entries.some(function (entry) { return entry.isIntersecting; })) {
+            observer.disconnect();
+            boot();
+          }
+        }, { rootMargin: "300px" });
+        observer.observe(root);
+      }
+
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadWhenVisible);
+      else loadWhenVisible();
     }());
   </script>
 </body>
