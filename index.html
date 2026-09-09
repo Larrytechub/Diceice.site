@@ -123,6 +123,7 @@
       var socket = null;
       var socketReady = null;
       var started = false;
+      var chartFailed = false;
 
       function setStatus(message, isError) {
         status.textContent = message;
@@ -198,18 +199,41 @@
         return Promise.resolve();
       }
 
+      function normalizeActiveSymbols(response) {
+        var symbols = response && Array.isArray(response.active_symbols) ? response.active_symbols : [];
+        return symbols.map(function (item) {
+          return Object.assign({}, item, {
+            symbol: item.symbol || item.underlying_symbol,
+            display_name: item.display_name || item.underlying_symbol_name || item.symbol || item.underlying_symbol,
+            symbol_type: item.symbol_type || item.underlying_symbol_type,
+            pip: item.pip !== undefined ? item.pip : item.pip_size
+          });
+        }).filter(function (item) { return item.symbol; });
+      }
+
+      function showMarketError(message) {
+        chartFailed = true;
+        setStatus(message, true);
+        root.innerHTML = '<div class="chart-fallback chart-loader" role="status"><div class="chart-loader-mark" aria-hidden="true"></div><div class="chart-loader-message">Market data unavailable</div><div class="chart-loader-subtitle">Deriv did not return an active market symbol. Please try again later.</div></div>';
+      }
+
       function boot() {
-        startConnection();
         var library = window.smartcharts;
         if (!library || !library.SmartChart || !window.React || !window.ReactDOM) {
-          setStatus("SmartChart bundle could not be loaded", true);
+          showMarketError("SmartChart bundle could not be loaded");
           root.innerHTML = '<div class="chart-fallback">The chart library could not be loaded. The documentation links below are still available.</div>';
           return;
         }
-        if (library.setSmartChartsPublicPath) library.setSmartChartsPublicPath("/");
-        try {
+        startConnection();
+        requestAPI({ active_symbols: "brief" }).then(function (response) {
+          var symbols = normalizeActiveSymbols(response);
+          if (!symbols.length) throw new Error("No active market symbols returned");
+          if (chartFailed) return;
+          if (library.setSmartChartsPublicPath) library.setSmartChartsPublicPath("/");
+          var preferred = symbols.find(function (item) { return item.symbol === "R_100"; }) || symbols[0];
           var chart = React.createElement(library.SmartChart, {
-            symbol: "R_100",
+            symbol: preferred.symbol,
+            activeSymbols: symbols,
             granularity: 60,
             chartType: "mountain",
             requestAPI: requestAPI,
@@ -217,14 +241,15 @@
             requestForget: requestForget,
             isConnectionOpened: true,
             isAnimationEnabled: true,
-            onMessage: function (message) { if (message && message.text) setStatus(message.text, message.type === "error"); }
+            onMessage: function (message) {
+              if (!chartFailed && message && message.text) setStatus(message.text, message.type === "error");
+            }
           });
           ReactDOM.render(chart, root);
           setStatus("Live market data");
-        } catch (error) {
-          setStatus("Chart could not be initialized", true);
-          root.innerHTML = '<div class="chart-fallback">The live chart could not be initialized. Check the browser console for details.</div>';
-        }
+        }).catch(function (error) {
+          showMarketError(error && error.message ? error.message : "Market symbols could not be loaded");
+        });
       }
 
       function loadWhenVisible() {
