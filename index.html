@@ -225,7 +225,12 @@
           return;
         }
         startConnection();
-        requestAPI({ active_symbols: "brief" }).then(function (response) {
+        Promise.race([
+          requestAPI({ active_symbols: "brief" }),
+          new Promise(function (_, reject) {
+            setTimeout(function () { reject(new Error("Market symbols request timed out")); }, 10000);
+          })
+        ]).then(function (response) {
           var symbols = normalizeActiveSymbols(response);
           if (!symbols.length) throw new Error("No active market symbols returned");
           if (chartFailed) return;
