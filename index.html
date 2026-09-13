@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Diceice.site — multilingual SmartCharts assets for financial charting and technical analysis." />
-  <title>Diceice.site — SmartCharts</title>
+  <meta name="description" content="ProMarkets — a focused workspace for discovering, testing, and managing trading bots in paper mode." />
+  <title>ProMarkets — Bot workspace</title>
   <link rel="stylesheet" href="/smartcharts.css" />
   <style>
     :root { color-scheme: dark; --bg: #08111f; --panel: #101d31; --line: #263957; --text: #edf4ff; --muted: #9eb0ca; --accent: #6ee7c8; --accent-2: #8aa7ff; }
@@ -55,225 +55,102 @@
     @media (max-width: 900px) { .hero { grid-template-columns: 1fr; gap: 34px; padding: 54px 0 70px; } }
     @media (max-width: 780px) { nav { display: none; } .grid { grid-template-columns: 1fr; } h1 { font-size: clamp(44px, 15vw, 68px); } }
   </style>
+    <link rel="stylesheet" href="/promarkets.css" />
 </head>
-<body>
-  <div class="shell">
-    <header>
-      <a class="brand" href="/"><span class="mark">D</span><span>Diceice.site</span></a>
-      <nav><a href="#features">Features</a><a href="#languages">Languages</a><a href="https://github.com/Larrytechub/Diceice.site">GitHub</a></nav>
-    </header>
+<body class="pm-body">
+  <header class="pm-header">
+    <div class="pm-shell" style="display:flex;align-items:center;gap:24px;width:min(1240px,calc(100% - 34px));">
+      <button class="pm-menu" aria-label="Toggle navigation">☰</button>
+      <a class="pm-brand" href="#" data-panel="free-bots"><span class="pm-logo">ϟ</span><span>ProMarkets</span></a>
+      <nav class="pm-main-nav" aria-label="Main navigation">
+        <button class="pm-nav-btn active" data-panel="free-bots">▦&nbsp; Free Bots</button>
+        <button class="pm-nav-btn" data-panel="bulk-trader">◈&nbsp; Bulk Trader</button>
+        <button class="pm-nav-btn" data-panel="dashboard">⌘&nbsp; Dashboard</button>
+        <button class="pm-nav-btn" data-panel="bot-builder">♙&nbsp; Bot Builder</button>
+      </nav>
+      <div class="pm-auth"><button class="pm-auth-btn outline" data-action="login">Log in</button><button class="pm-auth-btn filled" data-action="signup">Sign up</button></div>
+    </div>
+  </header>
 
-    <main>
-      <section class="hero">
-        <div>
-          <div class="eyebrow">SmartCharts asset library</div>
-          <h1>Clearer charts for sharper decisions.</h1>
-          <p class="lede">A multilingual collection of financial charting assets, technical indicators, and interface translations for web applications.</p>
-          <div class="actions">
-            <a class="button primary" href="https://github.com/Larrytechub/Diceice.site">View on GitHub ↗</a>
-            <a class="button" href="https://github.com/Larrytechub/Diceice.site/blob/main/docs/SMARTCHARTS_INTEGRATION.md">Read integration docs</a>
-          </div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-header"><strong>R_100 · Live market chart</strong><span class="chart-status" id="chart-status">Loads when visible</span></div>
-          <div id="smartchart-root">
-            <div class="chart-fallback chart-loader" role="status" aria-live="polite">
-              <div class="chart-loader-mark" aria-hidden="true"></div>
-              <div class="chart-loader-message" id="chart-loader-message">The live chart will load when visible…</div>
-              <div class="chart-loader-subtitle">Preparing a live market connection</div>
-            </div>
-          </div>
-        </div>
-      </section>
+  <main class="pm-shell">
+    <div class="pm-feature-rail" aria-label="Tools">
+      <button class="pm-feature active" data-panel="free-bots"><span class="pm-ficon">▦</span> Free Bots</button>
+      <button class="pm-feature" data-panel="dashboard"><span class="pm-ficon">◉</span> Wide Eye</button>
+      <button class="pm-feature" data-panel="analysis"><span class="pm-ficon">◎</span> Analysis Tool</button>
+      <button class="pm-feature" data-panel="speed-lab"><span class="pm-ficon">ϟ</span> Speed Lab</button>
+      <button class="pm-feature" data-panel="bulk-trader"><span class="pm-ficon">◌</span> Olympus Sniper</button>
+      <button class="pm-feature" data-panel="bulk-trader"><span class="pm-ficon">⌁</span> Trading View</button>
+      <button class="pm-feature" data-panel="bot-builder"><span class="pm-ficon">▥</span> Manual DTrader</button>
+      <button class="pm-feature" data-panel="tutorials"><span class="pm-ficon">▻</span> Tutorials</button>
+      <button class="pm-feature" data-panel="bulk-trader"><span class="pm-ficon">⟳</span> Copy Trader</button>
+    </div>
 
-      <section class="section" id="features">
-        <h2>Built for analysis interfaces</h2>
-        <p class="section-intro">The repository keeps the browser-ready bundles and localization resources together so a host application can add charting without rebuilding the world.</p>
-        <div class="grid">
-          <article class="card"><h3>Technical indicators</h3><p>Moving averages, Bollinger Bands, RSI, MACD, ADX, stochastic oscillators, and more.</p></article>
-          <article class="card"><h3>Multilingual UI</h3><p>Localized chart controls, market messages, trading terminology, help text, and tooltips.</p></article>
-          <article class="card"><h3>Browser-ready bundles</h3><p>Compiled JavaScript, CSS, SVG, and utility assets ready to load from a web application.</p></article>
-        </div>
-      </section>
+    <section class="pm-hero">
+      <span class="pm-badge">Paper trading workspace</span>
+      <h1>ProMarkets</h1>
+      <p>Load a bot and start trading — no setup, no noise.</p>
+    </section>
 
-      <section class="section" id="languages">
-        <h2>Language coverage</h2>
-        <p class="section-intro">Locale bundles are available for a broad set of financial and technical-analysis interfaces.</p>
-        <div class="tag-list"><span class="tag">English</span><span class="tag">Arabic</span><span class="tag">Bengali</span><span class="tag">Chinese</span><span class="tag">Dutch</span><span class="tag">French</span><span class="tag">German</span><span class="tag">Indonesian</span><span class="tag">Italian</span><span class="tag">Portuguese</span><span class="tag">Russian</span><span class="tag">Spanish</span><span class="tag">Swahili</span><span class="tag">Thai</span><span class="tag">Turkish</span><span class="tag">Vietnamese</span></div>
-      </section>
-    </main>
+    <section class="pm-panel active" id="panel-free-bots">
+      <div class="pm-section-head">
+        <div><h2>Free bots</h2><p>Curated strategies ready to test in your workspace.</p></div>
+        <div class="pm-filter" role="group" aria-label="Bot filters"><button class="active" data-filter="all">All</button><button data-filter="open">Open access</button><button data-filter="locked">Protected</button></div>
+      </div>
+      <div class="pm-bot-grid" id="bot-grid">
+        <article class="pm-bot-card" data-access="locked" data-bot="Tradescript Bullets">
+          <div class="pm-bot-visual orange"><span class="pm-bot-flag">OVER / UNDER</span><span class="pm-bot-flag" style="left:auto;right:10px;">PROTECTED</span><div class="pm-robot"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="core">ϟ</i></div></div>
+          <div class="pm-bot-info"><div class="pm-bot-top"><strong class="pm-bot-name">Tradescript Bullets</strong><span class="pm-status locked">Password required</span></div><p class="pm-bot-copy">A precise over/under strategy for short, focused sessions.</p><button class="pm-load orange" data-load="Tradescript Bullets">↧&nbsp; Unlock &amp; load</button></div>
+        </article>
+        <article class="pm-bot-card" data-access="open" data-bot="Olympian Glory">
+          <div class="pm-bot-visual pink"><span class="pm-bot-flag">OVER / UNDER</span><div class="pm-robot"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="core">ϟ</i></div><span class="pm-spark">↟</span></div>
+          <div class="pm-bot-info"><div class="pm-bot-top"><strong class="pm-bot-name">Olympian Glory</strong><span class="pm-status">Open access</span></div><p class="pm-bot-copy">A balanced momentum bot built for repeatable entries.</p><button class="pm-load" data-load="Olympian Glory">↧&nbsp; Load bot</button></div>
+        </article>
+        <article class="pm-bot-card" data-access="open" data-bot="Concept AI">
+          <div class="pm-bot-visual blue"><span class="pm-bot-flag">OVER / UNDER</span><div class="pm-robot"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="core">◎</i></div><span class="pm-spark">◌</span></div>
+          <div class="pm-bot-info"><div class="pm-bot-top"><strong class="pm-bot-name">Concept AI</strong><span class="pm-status">Open access</span></div><p class="pm-bot-copy">An adaptive signal scanner for changing market rhythm.</p><button class="pm-load cyan" data-load="Concept AI">↧&nbsp; Load bot</button></div>
+        </article>
+        <article class="pm-bot-card" data-access="open" data-bot="Tradescript V2">
+          <div class="pm-bot-visual red"><span class="pm-bot-flag">OVER / UNDER</span><div class="pm-robot"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="core">⌁</i></div><span class="pm-spark">&lt;/&gt;</span></div>
+          <div class="pm-bot-info"><div class="pm-bot-top"><strong class="pm-bot-name">Tradescript V2</strong><span class="pm-status">Open access</span></div><p class="pm-bot-copy">A streamlined ruleset with tighter entry confirmation.</p><button class="pm-load red" data-load="Tradescript V2">↧&nbsp; Load bot</button></div>
+        </article>
+        <article class="pm-bot-card" data-access="locked" data-bot="Even Odd Hunter">
+          <div class="pm-bot-visual green"><span class="pm-bot-flag">EVEN / ODD</span><div class="pm-robot"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="core">01</i></div><span class="pm-spark">E&nbsp;&nbsp;O</span></div>
+          <div class="pm-bot-info"><div class="pm-bot-top"><strong class="pm-bot-name">Even Odd Hunter</strong><span class="pm-status locked">Protected</span></div><p class="pm-bot-copy">A probability-focused bot for even and odd contracts.</p><button class="pm-load gray" data-load="Even Odd Hunter">↧&nbsp; Unlock &amp; load</button></div>
+        </article>
+        <article class="pm-bot-card" data-access="open" data-bot="Over Changer">
+          <div class="pm-bot-visual orange"><span class="pm-bot-flag">OVER / UNDER</span><div class="pm-robot"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="core">ϟ</i></div><span class="pm-spark">↗</span></div>
+          <div class="pm-bot-info"><div class="pm-bot-top"><strong class="pm-bot-name">Over Changer</strong><span class="pm-status">Open access</span></div><p class="pm-bot-copy">A quick-switch setup for tracking directional changes.</p><button class="pm-load orange" data-load="Over Changer">↧&nbsp; Load bot</button></div>
+        </article>
+      </div>
+    </section>
 
-    <footer>Diceice.site · SmartCharts assets and localization resources</footer>
-  </div>
+    <section class="pm-panel" id="panel-dashboard">
+      <div class="pm-section-head"><div><h2>Dashboard</h2><p>Your paper account at a glance.</p></div><button class="pm-filter button-refresh" data-action="refresh">↻ Refresh</button></div>
+      <div class="pm-stats"><div class="pm-stat"><label>Paper balance</label><strong>$10,842.50</strong><span>+4.82% this week</span></div><div class="pm-stat"><label>Active bots</label><strong id="active-bots">3</strong><span>2 running now</span></div><div class="pm-stat"><label>Win rate</label><strong>68.4%</strong><span>+2.1% vs last week</span></div><div class="pm-stat"><label>Net return</label><strong>+$842.50</strong><span>Paper performance</span></div></div>
+      <div class="pm-dashboard-grid"><div class="pm-surface"><h3>Performance · last 30 days</h3><div class="pm-chart"><svg viewBox="0 0 600 200" preserveAspectRatio="none" aria-label="Performance chart"><defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7399e9" stop-opacity=".35"/><stop offset="1" stop-color="#7399e9" stop-opacity="0"/></linearGradient></defs><path d="M0 163 C35 160 48 137 78 145 S125 110 158 128 S208 101 238 112 S290 83 315 99 S355 78 386 88 S425 44 458 65 S504 28 535 47 S569 21 600 24 L600 200 L0 200Z" fill="url(#area)"/><path d="M0 163 C35 160 48 137 78 145 S125 110 158 128 S208 101 238 112 S290 83 315 99 S355 78 386 88 S425 44 458 65 S504 28 535 47 S569 21 600 24" fill="none" stroke="#4b74cd" stroke-width="3"/></svg></div></div><div class="pm-surface"><h3>Watchlist</h3><div class="pm-watch-row"><span><strong>Volatility 100</strong><small>R_100</small></span><span class="pm-positive">+2.84%</span></div><div class="pm-watch-row"><span><strong>Volatility 75</strong><small>R_75</small></span><span class="pm-positive">+1.20%</span></div><div class="pm-watch-row"><span><strong>Volatility 50</strong><small>R_50</small></span><span style="color:#d16a63;font-weight:800;">-0.44%</span></div><div class="pm-watch-row"><span><strong>Step Index</strong><small>stpRNG</small></span><span class="pm-positive">+0.79%</span></div></div></div>
+    </section>
 
-  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js" defer></script>
-  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js" defer></script>
-  <script src="https://unpkg.com/react-transition-group@4.4.5/dist/react-transition-group.js" defer></script>
-  <script src="https://unpkg.com/moment@2.30.1/min/moment.min.js" defer></script>
-  <script src="/smartcharts.js" defer></script>
-  <script>
-    (function () {
-      var status = document.getElementById("chart-status");
-      var root = document.getElementById("smartchart-root");
-      var loaderMessage = document.getElementById("chart-loader-message");
-      var pending = new Map();
-      var streamsByRequest = new Map();
-      var streamsByCallback = new Map();
-      var nextRequestId = 1;
-      var socket = null;
-      var socketReady = null;
-      var started = false;
-      var chartFailed = false;
+    <section class="pm-panel" id="panel-bulk-trader">
+      <div class="pm-section-head"><div><h2>Bulk Trader</h2><p>Queue several bots for the same paper run.</p></div><div class="pm-filter"><button class="active">Paper mode</button></div></div>
+      <div class="pm-surface"><table class="pm-table"><thead><tr><th><input type="checkbox" id="select-all" /></th><th>BOT</th><th>MARKET</th><th>STAKE</th><th>STATUS</th><th>RETURN</th></tr></thead><tbody><tr><td><input type="checkbox" class="bot-check" /></td><td><strong>Olympian Glory</strong></td><td>Volatility 100</td><td>$25</td><td><span class="pm-status">Ready</span></td><td class="pm-positive">+14.2%</td></tr><tr><td><input type="checkbox" class="bot-check" /></td><td><strong>Concept AI</strong></td><td>Volatility 75</td><td>$20</td><td><span class="pm-status">Ready</span></td><td class="pm-positive">+11.8%</td></tr><tr><td><input type="checkbox" class="bot-check" /></td><td><strong>Tradescript V2</strong></td><td>Step Index</td><td>$15</td><td><span class="pm-status">Ready</span></td><td class="pm-positive">+9.6%</td></tr></tbody></table><button class="pm-create" id="bulk-run" style="margin-top:16px;width:auto;padding:10px 18px;">Run selected bots</button></div>
+    </section>
 
-      function setStatus(message, isError) {
-        status.textContent = message;
-        if (loaderMessage) loaderMessage.textContent = message;
-        if (isError) status.style.color = "#ff9f9f";
-      }
+    <section class="pm-panel" id="panel-bot-builder">
+      <div class="pm-section-head"><div><h2>Bot Builder</h2><p>Turn a simple setup into a reusable paper strategy.</p></div></div>
+      <div class="pm-builder"><div class="pm-surface"><div class="pm-field"><label>Bot name</label><input id="builder-name" placeholder="My momentum bot" /></div><div class="pm-field"><label>Market</label><select><option>Volatility 100 Index</option><option>Volatility 75 Index</option><option>Step Index</option></select></div><div class="pm-field"><label>Strategy</label><select><option>Momentum follow</option><option>Over / Under reversal</option><option>Even / Odd probability</option></select></div><div class="pm-field"><label>Stake per trade</label><input type="number" value="10" min="1" /></div><button class="pm-create" id="create-bot">Create paper bot</button></div><div class="pm-surface"><h3>Strategy preview</h3><div class="pm-chart" style="height:240px;"><svg viewBox="0 0 600 220" preserveAspectRatio="none"><path d="M0 167 L45 153 L85 164 L124 130 L160 142 L206 99 L250 119 L291 76 L332 93 L378 65 L424 83 L468 40 L514 59 L559 26 L600 38" fill="none" stroke="#2ba47d" stroke-width="3"/><circle cx="559" cy="26" r="6" fill="#2ba47d"/></svg></div></div></div>
+    </section>
 
-      function startConnection() {
-        if (started) return;
-        started = true;
-        setStatus("Retrieving market symbols…");
-        socketReady = new Promise(function (resolve, reject) {
-          socket = new WebSocket("wss://ws.derivws.com/websockets/v3?app_id=3396");
-          socket.addEventListener("open", resolve, { once: true });
-          socket.addEventListener("error", reject, { once: true });
-        });
+    <section class="pm-panel" id="panel-analysis"><div class="pm-section-head"><div><h2>Analysis Tool</h2><p>Compare strategy signals before you load a bot.</p></div></div><div class="pm-surface"><h3>Signal comparison</h3><table class="pm-table"><thead><tr><th>MARKET</th><th>MOMENTUM</th><th>VOLATILITY</th><th>BIAS</th></tr></thead><tbody><tr><td><strong>Volatility 100</strong></td><td>Strong</td><td>Medium</td><td class="pm-positive">Bullish</td></tr><tr><td><strong>Volatility 75</strong></td><td>Medium</td><td>High</td><td class="pm-positive">Bullish</td></tr><tr><td><strong>Step Index</strong></td><td>Low</td><td>Low</td><td style="color:#d16a63;font-weight:800;">Neutral</td></tr></tbody></table></div></section>
+    <section class="pm-panel" id="panel-speed-lab"><div class="pm-section-head"><div><h2>Speed Lab</h2><p>Run fast paper experiments with controlled settings.</p></div></div><div class="pm-surface"><h3>Experiment presets</h3><div class="pm-stats"><div class="pm-stat"><label>Scalper sprint</label><strong>5 min</strong><span>High frequency</span></div><div class="pm-stat"><label>Balanced run</label><strong>30 min</strong><span>Recommended</span></div><div class="pm-stat"><label>Deep test</label><strong>4 hrs</strong><span>More samples</span></div></div><button class="pm-create" data-action="speed">Start a paper experiment</button></div></section>
+    <section class="pm-panel" id="panel-tutorials"><div class="pm-section-head"><div><h2>Tutorials</h2><p>Get from your first load to a confident paper run.</p></div></div><div class="pm-stats"><div class="pm-stat"><label>01</label><strong>Load a bot</strong><span>Choose a strategy</span></div><div class="pm-stat"><label>02</label><strong>Set a market</strong><span>Pick a contract</span></div><div class="pm-stat"><label>03</label><strong>Run safely</strong><span>Paper mode first</span></div><div class="pm-stat"><label>04</label><strong>Review</strong><span>Learn from results</span></div></div></section>
 
-        socket.addEventListener("message", function (event) {
-          var response;
-          try { response = JSON.parse(event.data); } catch (error) { return; }
-          var reqId = response.echo_req && response.echo_req.req_id;
-          var stream = reqId ? streamsByRequest.get(reqId) : null;
-          if (!stream && response.subscription && response.subscription.id) {
-            streamsByCallback.forEach(function (item) {
-              if (item.subscriptionId === response.subscription.id) stream = item;
-            });
-          }
-          if (stream) {
-            if (response.subscription && response.subscription.id) stream.subscriptionId = response.subscription.id;
-            stream.callback(response);
-            return;
-          }
-          var pendingRequest = reqId ? pending.get(reqId) : null;
-          if (!pendingRequest) return;
-          pending.delete(reqId);
-          if (response.error) pendingRequest.reject(new Error(response.error.message || "Deriv API error"));
-          else pendingRequest.resolve(response);
-        });
+    <div class="pm-bottom-dock"><button class="pm-run" id="run-toggle"><i>▶</i><span>Run</span></button><div class="pm-execution">EXECUTION<strong>FAST <span class="pm-switch"></span></strong></div><div class="pm-dock-state" id="dock-state">Bot is not running</div></div>
+    <footer class="pm-footer">ProMarkets · Paper trading tools for focused practice</footer>
+  </main>
 
-        socket.addEventListener("close", function () { setStatus("Market data connection closed", true); });
-        socketReady.catch(function () { setStatus("Market data is unavailable right now", true); });
-      }
+  <div class="pm-modal-wrap" id="pm-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="pm-modal"><h3 id="modal-title">Unlock this bot</h3><p id="modal-copy">This protected strategy needs a password before it can be loaded into your paper workspace.</p><div class="pm-field"><label>Password</label><input id="modal-password" type="password" placeholder="Enter password" /></div><div class="pm-modal-actions"><button data-action="close-modal">Cancel</button><button class="primary" id="unlock-bot">Unlock bot</button></div></div></div>
+  <div class="pm-toast" id="pm-toast" role="status"></div>
 
-      function sendRequest(request) {
-        startConnection();
-        return socketReady.then(function () {
-          return new Promise(function (resolve, reject) {
-            var reqId = nextRequestId++;
-            pending.set(reqId, { resolve: resolve, reject: reject });
-            socket.send(JSON.stringify(Object.assign({}, request, { req_id: reqId })));
-          });
-        });
-      }
-
-      function requestAPI(request) { return sendRequest(request); }
-
-      function requestSubscribe(request, callback) {
-        startConnection();
-        return socketReady.then(function () {
-          var reqId = nextRequestId++;
-          var stream = { callback: callback, subscriptionId: null };
-          streamsByRequest.set(reqId, stream);
-          streamsByCallback.set(callback, stream);
-          socket.send(JSON.stringify(Object.assign({}, request, { subscribe: 1, req_id: reqId })));
-        });
-      }
-
-      function requestForget(request, callback) {
-        var stream = streamsByCallback.get(callback);
-        if (!stream) return Promise.resolve();
-        streamsByCallback.delete(callback);
-        if (stream.subscriptionId) return sendRequest({ forget: stream.subscriptionId });
-        return Promise.resolve();
-      }
-
-      function normalizeActiveSymbols(response) {
-        var symbols = response && Array.isArray(response.active_symbols) ? response.active_symbols : [];
-        return symbols.map(function (item) {
-          return Object.assign({}, item, {
-            symbol: item.symbol || item.underlying_symbol,
-            display_name: item.display_name || item.underlying_symbol_name || item.symbol || item.underlying_symbol,
-            symbol_type: item.symbol_type || item.underlying_symbol_type,
-            pip: item.pip !== undefined ? item.pip : item.pip_size
-          });
-        }).filter(function (item) { return item.symbol; });
-      }
-
-      function showMarketError(message) {
-        chartFailed = true;
-        setStatus(message, true);
-        root.innerHTML = '<div class="chart-fallback chart-loader" role="status"><div class="chart-loader-mark" aria-hidden="true"></div><div class="chart-loader-message">Market data unavailable</div><div class="chart-loader-subtitle">Deriv did not return an active market symbol. Please try again later.</div></div>';
-      }
-
-      function boot() {
-        var library = window.smartcharts;
-        if (!library || !library.SmartChart || !window.React || !window.ReactDOM) {
-          showMarketError("SmartChart bundle could not be loaded");
-          root.innerHTML = '<div class="chart-fallback">The chart library could not be loaded. The documentation links below are still available.</div>';
-          return;
-        }
-        startConnection();
-        Promise.race([
-          requestAPI({ active_symbols: "brief" }),
-          new Promise(function (_, reject) {
-            setTimeout(function () { reject(new Error("Market symbols request timed out")); }, 10000);
-          })
-        ]).then(function (response) {
-          var symbols = normalizeActiveSymbols(response);
-          if (!symbols.length) throw new Error("No active market symbols returned");
-          if (chartFailed) return;
-          if (library.setSmartChartsPublicPath) library.setSmartChartsPublicPath("/");
-          var preferred = symbols.find(function (item) { return item.symbol === "R_100"; }) || symbols[0];
-          var chart = React.createElement(library.SmartChart, {
-            symbol: preferred.symbol,
-            activeSymbols: symbols,
-            granularity: 60,
-            chartType: "mountain",
-            requestAPI: requestAPI,
-            requestSubscribe: requestSubscribe,
-            requestForget: requestForget,
-            isConnectionOpened: true,
-            isAnimationEnabled: true,
-            onMessage: function (message) {
-              if (!chartFailed && message && message.text) setStatus(message.text, message.type === "error");
-            }
-          });
-          ReactDOM.render(chart, root);
-          setStatus("Live market data");
-        }).catch(function (error) {
-          showMarketError(error && error.message ? error.message : "Market symbols could not be loaded");
-        });
-      }
-
-      function loadWhenVisible() {
-        if (!("IntersectionObserver" in window)) {
-          boot();
-          return;
-        }
-        var observer = new IntersectionObserver(function (entries) {
-          if (entries.some(function (entry) { return entry.isIntersecting; })) {
-            observer.disconnect();
-            boot();
-          }
-        }, { rootMargin: "300px" });
-        observer.observe(root);
-      }
-
-      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadWhenVisible);
-      else loadWhenVisible();
-    }());
-  </script>
+  <script src="/promarkets.js" defer></script>
 </body>
 </html>
