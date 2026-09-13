@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="ProMarkets — a focused workspace for discovering, testing, and managing trading bots in paper mode." />
-  <title>ProMarkets — Bot workspace</title>
+  <meta name="description" content="diceice.site — a focused workspace for discovering, testing, and managing trading bots in paper mode." />
+  <title>diceice.site — Bot workspace</title>
   <link rel="stylesheet" href="/smartcharts.css" />
   <style>
     :root { color-scheme: dark; --bg: #08111f; --panel: #101d31; --line: #263957; --text: #edf4ff; --muted: #9eb0ca; --accent: #6ee7c8; --accent-2: #8aa7ff; }
@@ -55,13 +55,13 @@
     @media (max-width: 900px) { .hero { grid-template-columns: 1fr; gap: 34px; padding: 54px 0 70px; } }
     @media (max-width: 780px) { nav { display: none; } .grid { grid-template-columns: 1fr; } h1 { font-size: clamp(44px, 15vw, 68px); } }
   </style>
-    <link rel="stylesheet" href="/promarkets.css" />
+    <link rel="stylesheet" href="/diceice.css" />
 </head>
 <body class="pm-body">
   <header class="pm-header">
     <div class="pm-shell" style="display:flex;align-items:center;gap:24px;width:min(1240px,calc(100% - 34px));">
       <button class="pm-menu" aria-label="Toggle navigation">☰</button>
-      <a class="pm-brand" href="#" data-panel="free-bots"><span class="pm-logo">ϟ</span><span>ProMarkets</span></a>
+      <a class="pm-brand" href="#" data-panel="free-bots"><span class="pm-logo">ϟ</span><span>diceice.site</span></a>
       <nav class="pm-main-nav" aria-label="Main navigation">
         <button class="pm-nav-btn active" data-panel="free-bots">▦&nbsp; Free Bots</button>
         <button class="pm-nav-btn" data-panel="bulk-trader">◈&nbsp; Bulk Trader</button>
@@ -87,7 +87,7 @@
 
     <section class="pm-hero">
       <span class="pm-badge">Paper trading workspace</span>
-      <h1>ProMarkets</h1>
+      <h1>diceice.site</h1>
       <p>Load a bot and start trading — no setup, no noise.</p>
     </section>
 
@@ -145,12 +145,12 @@
     <section class="pm-panel" id="panel-tutorials"><div class="pm-section-head"><div><h2>Tutorials</h2><p>Get from your first load to a confident paper run.</p></div></div><div class="pm-stats"><div class="pm-stat"><label>01</label><strong>Load a bot</strong><span>Choose a strategy</span></div><div class="pm-stat"><label>02</label><strong>Set a market</strong><span>Pick a contract</span></div><div class="pm-stat"><label>03</label><strong>Run safely</strong><span>Paper mode first</span></div><div class="pm-stat"><label>04</label><strong>Review</strong><span>Learn from results</span></div></div></section>
 
     <div class="pm-bottom-dock"><button class="pm-run" id="run-toggle"><i>▶</i><span>Run</span></button><div class="pm-execution">EXECUTION<strong>FAST <span class="pm-switch"></span></strong></div><div class="pm-dock-state" id="dock-state">Bot is not running</div></div>
-    <footer class="pm-footer">ProMarkets · Paper trading tools for focused practice</footer>
+    <footer class="pm-footer">diceice.site · Paper trading tools for focused practice</footer>
   </main>
 
   <div class="pm-modal-wrap" id="pm-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="pm-modal"><h3 id="modal-title">Unlock this bot</h3><p id="modal-copy">This protected strategy needs a password before it can be loaded into your paper workspace.</p><div class="pm-field"><label>Password</label><input id="modal-password" type="password" placeholder="Enter password" /></div><div class="pm-modal-actions"><button data-action="close-modal">Cancel</button><button class="primary" id="unlock-bot">Unlock bot</button></div></div></div>
   <div class="pm-toast" id="pm-toast" role="status"></div>
 
-  <script src="/promarkets.js" defer></script>
+  <script src="/diceice.js" defer></script>
 </body>
 </html>
