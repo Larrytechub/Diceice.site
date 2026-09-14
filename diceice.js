@@ -124,7 +124,8 @@
 
   function addCustomBot(bot) {
     var grid = $("#bot-grid");
-    if (!grid || !bot || !bot.name || $(".pm-bot-card[data-bot="" + CSS.escape(bot.name) + ""]")) return;
+    var selector = ".pm-bot-card[data-bot=\"" + CSS.escape(bot.name) + "\"]";
+    if (!grid || !bot || !bot.name || $(selector)) return;
     var card = createNode("article", "pm-bot-card");
     card.dataset.access = "open";
     card.dataset.bot = bot.name;
