@@ -10,7 +10,7 @@
   var toast = $("#pm-toast");
   var selectedProtected = "";
   var toastTimer;
-  var state = { loadedBot: "", queuedBots: [], running: false, execution: "FAST", experiments: [], customBots: [] };
+  var state = { loadedBot: "", queuedBots: [], running: false, execution: "FAST", experiments: [], customBots: [], orders: [], copiedStrategies: [], paperBalance: 10842.5 };
 
   try {
     var saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "null");
@@ -20,6 +20,9 @@
       state.execution = saved.execution === "SAFE" ? "SAFE" : "FAST";
       state.experiments = Array.isArray(saved.experiments) ? saved.experiments : [];
       state.customBots = Array.isArray(saved.customBots) ? saved.customBots : [];
+      state.orders = Array.isArray(saved.orders) ? saved.orders : [];
+      state.copiedStrategies = Array.isArray(saved.copiedStrategies) ? saved.copiedStrategies : [];
+      state.paperBalance = Number.isFinite(saved.paperBalance) ? saved.paperBalance : 10842.5;
     }
   } catch (error) {}
 
@@ -30,7 +33,10 @@
         queuedBots: state.queuedBots,
         execution: state.execution,
         experiments: state.experiments.slice(-10),
-        customBots: state.customBots
+        customBots: state.customBots,
+        orders: state.orders.slice(-12),
+        copiedStrategies: state.copiedStrategies,
+        paperBalance: state.paperBalance
       }));
     } catch (error) {}
   }
@@ -82,6 +88,67 @@
     } else {
       setDockState("Bot is not running");
     }
+  }
+
+  function formatMoney(amount) {
+    return "$" + Number(amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function updatePaperMetrics() {
+    var balance = $("#paper-balance");
+    var net = $("#net-return");
+    var wins = state.orders.filter(function (order) { return order.result === "WIN"; }).length;
+    var losses = state.orders.filter(function (order) { return order.result === "LOSS"; }).length;
+    var total = wins + losses;
+    var winRate = $("#win-rate");
+    if (balance) balance.textContent = formatMoney(state.paperBalance);
+    if (net) net.textContent = (state.paperBalance >= 10000 ? "+" : "") + formatMoney(state.paperBalance - 10000);
+    if (winRate && total) winRate.textContent = Math.round((wins / total) * 100) + "%";
+  }
+
+  function renderPaperOrders() {
+    var table = $("#paper-orders");
+    if (!table) return;
+    table.innerHTML = "";
+    if (!state.orders.length) {
+      var empty = document.createElement("tr");
+      empty.innerHTML = '<td colspan="5" class="pm-empty">No manual orders yet. Your first paper order will appear here.</td>';
+      table.appendChild(empty);
+      return;
+    }
+    state.orders.slice().reverse().forEach(function (order) {
+      var row = document.createElement("tr");
+      row.innerHTML = "<td>" + order.time + "</td><td>" + order.market + "</td><td>" + order.direction + "</td><td>" + formatMoney(order.stake) + '<\/td><td class="' + (order.result === "WIN" ? "pm-positive" : "pm-negative") + '">' + order.result + " " + (order.result === "WIN" ? "+" : "") + formatMoney(order.pnl) + "</td>";
+      table.appendChild(row);
+    });
+  }
+
+  function recordPaperOrder(market, contract, direction, stake, source) {
+    var won = Math.random() > .36;
+    var pnl = won ? stake * .82 : -stake;
+    state.paperBalance += pnl;
+    state.orders.push({
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      market: market,
+      contract: contract,
+      direction: direction,
+      stake: stake,
+      pnl: Number(pnl.toFixed(2)),
+      result: won ? "WIN" : "LOSS",
+      source: source || "manual"
+    });
+    state.orders = state.orders.slice(-12);
+    persist();
+    renderPaperOrders();
+    updatePaperMetrics();
+    showToast((source || "Paper") + " order settled " + (won ? "in profit" : "at a loss") + ". No real trade was placed.");
+  }
+
+  function updateCopySelection() {
+    state.copiedStrategies = $$("[data-copy]:checked").map(function (input) { return input.dataset.copy; });
+    var count = $("#copy-count");
+    if (count) count.textContent = state.copiedStrategies.length + " selected";
+    persist();
   }
 
   function markLoaded(name, card) {
@@ -205,6 +272,69 @@
     });
   });
 
+  $$('[data-action="refresh-market"]').forEach(function (button) {
+    button.addEventListener("click", function () {
+      $$("[data-market-change]").forEach(function (node, index) {
+        var drift = (Math.random() * 1.8 + .2).toFixed(2);
+        node.textContent = (index === 2 ? "-" : "+") + drift + "%";
+        node.classList.toggle("pm-negative", index === 2);
+        node.classList.toggle("pm-positive", index !== 2);
+      });
+      var updated = $("#market-updated");
+      if (updated) updated.textContent = "just now";
+      showToast("Paper market feed refreshed.");
+    });
+  });
+
+  $$("[data-timeframe]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      $$("[data-timeframe]").forEach(function (item) { item.classList.toggle("active", item === button); });
+      showToast("Chart interval set to " + button.dataset.timeframe + ".");
+    });
+  });
+
+  $$("[data-direction]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      $$("[data-direction]").forEach(function (item) { item.classList.toggle("active", item === button); });
+    });
+  });
+
+  $$("[data-copy]").forEach(function (input) {
+    input.checked = state.copiedStrategies.indexOf(input.dataset.copy) !== -1;
+    input.addEventListener("change", updateCopySelection);
+  });
+
+  $('[data-action="manual-order"]')?.addEventListener("click", function () {
+    var market = $("#manual-market")?.value || "Volatility 100 Index";
+    var contract = $("#manual-contract")?.value || "Higher / Lower";
+    var direction = $("[data-direction].active")?.dataset.direction || "BUY";
+    var stake = Number($("#manual-stake")?.value || 0);
+    if (!Number.isFinite(stake) || stake <= 0) {
+      showToast("Enter a paper stake greater than zero.");
+      $("#manual-stake")?.focus();
+      return;
+    }
+    recordPaperOrder(market, contract, direction, stake, "Manual");
+  });
+
+  $('[data-action="connect-copy"]')?.addEventListener("click", function () {
+    if (!state.copiedStrategies.length) {
+      showToast("Select at least one paper source first.");
+      return;
+    }
+    var connected = $("#copy-session-status");
+    var note = $("#copy-session-note");
+    var meter = $("#copy-meter");
+    if (connected) connected.textContent = "Paper session active";
+    if (note) note.textContent = "Mirroring " + state.copiedStrategies.join(", ") + ".";
+    if (meter) meter.style.width = Math.min(100, state.copiedStrategies.length * 33) + "%";
+    state.queuedBots = state.copiedStrategies.slice();
+    state.loadedBot = state.copiedStrategies[0];
+    persist();
+    updateWorkspaceState();
+    showToast("Paper copy session started. No account was connected.");
+  });
+
   $$('[data-action="speed"]').forEach(function (button) {
     button.addEventListener("click", function () {
       state.experiments.push({ preset: "paper", startedAt: new Date().toISOString() });
@@ -279,5 +409,7 @@
 
   state.customBots.forEach(addCustomBot);
   applyFilter("all");
+  renderPaperOrders();
+  updatePaperMetrics();
   updateWorkspaceState();
 }());
