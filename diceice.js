@@ -8,6 +8,10 @@
   var modal = $("#pm-modal");
   var modalPassword = $("#modal-password");
   var toast = $("#pm-toast");
+  var liveConfirmModal = $("#live-confirm-modal");
+  var liveClient = null;
+  var pendingLiveOrder = null;
+  var liveRisk = 0;
   var selectedProtected = "";
   var toastTimer;
   var state = { loadedBot: "", queuedBots: [], running: false, execution: "FAST", experiments: [], customBots: [], orders: [], copiedStrategies: [], paperBalance: 10842.5 };
@@ -104,6 +108,32 @@
     if (balance) balance.textContent = formatMoney(state.paperBalance);
     if (net) net.textContent = (state.paperBalance >= 10000 ? "+" : "") + formatMoney(state.paperBalance - 10000);
     if (winRate && total) winRate.textContent = Math.round((wins / total) * 100) + "%";
+  }
+
+  function setLiveStatus(message, connected) {
+    var status = $("#live-status");
+    var dot = $("#live-status-dot");
+    var balance = $("#live-balance");
+    if (status) status.textContent = message;
+    if (dot) dot.classList.toggle("connected", !!connected);
+    if (balance && liveClient && liveClient.balance !== null) {
+      balance.textContent = formatMoney(liveClient.balance) + " " + (liveClient.currency || "");
+    }
+  }
+
+  function closeLiveConfirmation() {
+    pendingLiveOrder = null;
+    if (liveConfirmModal) liveConfirmModal.classList.remove("open");
+    var check = $("#live-confirm-check");
+    if (check) check.checked = false;
+  }
+
+  function openLiveConfirmation(order) {
+    pendingLiveOrder = order;
+    var summary = $("#live-confirm-summary");
+    var mode = order.contract + " · " + (order.direction === "BUY" ? "Buy / Higher" : "Sell / Lower");
+    if (summary) summary.innerHTML = "<strong>" + order.market + "</strong><span>" + mode + "</span><b>" + formatMoney(order.stake) + " " + (liveClient?.currency || "") + "</b>";
+    if (liveConfirmModal) liveConfirmModal.classList.add("open");
   }
 
   function renderPaperOrders() {
@@ -310,11 +340,143 @@
     var direction = $("[data-direction].active")?.dataset.direction || "BUY";
     var stake = Number($("#manual-stake")?.value || 0);
     if (!Number.isFinite(stake) || stake <= 0) {
-      showToast("Enter a paper stake greater than zero.");
+      showToast("Enter a stake greater than zero.");
       $("#manual-stake")?.focus();
       return;
     }
+    if ($("#live-mode")?.checked) {
+      var maxStake = Number($("#live-max-stake")?.value || 0);
+      var maxLoss = Number($("#live-max-loss")?.value || 0);
+      if (!liveClient || !liveClient.connected) {
+        showToast("Connect and authorize your Deriv account first.");
+        return;
+      }
+      if (contract === "Over / Under") {
+        showToast("Live Over / Under contracts are not enabled yet.");
+        return;
+      }
+      if (!Number.isFinite(maxStake) || stake > maxStake) {
+        showToast("Live stake exceeds your configured maximum.");
+        return;
+      }
+      if (!Number.isFinite(maxLoss) || liveRisk + stake > maxLoss) {
+        showToast("This order would exceed your live session loss limit.");
+        return;
+      }
+      openLiveConfirmation({ market: market, contract: contract, direction: direction, stake: stake });
+      return;
+    }
     recordPaperOrder(market, contract, direction, stake, "Manual");
+  });
+
+  $('[data-action="connect-live"]')?.addEventListener("click", async function (button) {
+    var tokenInput = $("#deriv-token");
+    var token = tokenInput ? tokenInput.value.trim() : "";
+    if (!token) {
+      showToast("Enter a Deriv API token. It will stay in memory only.");
+      tokenInput?.focus();
+      return;
+    }
+    if (!window.DiceiceDeriv) {
+      showToast("The Deriv trading module is unavailable.");
+      return;
+    }
+    button.currentTarget.disabled = true;
+    setLiveStatus("Connecting…", false);
+    try {
+      liveClient = window.DiceiceDeriv.createClient();
+      liveClient.onBalance = function () { setLiveStatus("Authorized · live mode off", true); };
+      liveClient.onDisconnect = function () {
+        var liveMode = $("#live-mode");
+        if (liveMode) { liveMode.checked = false; liveMode.disabled = true; }
+        setLiveStatus("Disconnected", false);
+      };
+      var account = await liveClient.connect(token);
+      tokenInput.value = "";
+      var liveMode = $("#live-mode");
+      if (liveMode) liveMode.disabled = false;
+      var disconnect = $('[data-action="disconnect-live"]');
+      if (disconnect) disconnect.disabled = false;
+      setLiveStatus("Authorized · live mode off", true);
+      showToast("Deriv account connected. Live trading is still off.");
+      if (account.currency) $("#live-balance").textContent = formatMoney(account.balance) + " " + account.currency;
+    } catch (error) {
+      if (liveClient) liveClient.disconnect();
+      liveClient = null;
+      setLiveStatus("Connection failed", false);
+      showToast(error.message || "Could not connect to Deriv.");
+    } finally {
+      button.currentTarget.disabled = false;
+    }
+  });
+
+  $('[data-action="disconnect-live"]')?.addEventListener("click", function () {
+    if (liveClient) liveClient.disconnect();
+    liveClient = null;
+    liveRisk = 0;
+    var liveMode = $("#live-mode");
+    if (liveMode) { liveMode.checked = false; liveMode.disabled = true; }
+    this.disabled = true;
+    setLiveStatus("Disconnected", false);
+    showToast("Deriv account disconnected. No order was sent.");
+  });
+
+  $('[data-action="emergency-stop"]')?.addEventListener("click", function () {
+    if (liveClient) liveClient.disconnect();
+    liveClient = null;
+    liveRisk = 0;
+    var liveMode = $("#live-mode");
+    if (liveMode) { liveMode.checked = false; liveMode.disabled = true; }
+    var disconnect = $('[data-action="disconnect-live"]');
+    if (disconnect) disconnect.disabled = true;
+    setLiveStatus("Emergency stop active", false);
+    closeLiveConfirmation();
+    showToast("Emergency stop active. Live mode is disabled.");
+  });
+
+  $('[data-action="cancel-live-order"]')?.addEventListener("click", closeLiveConfirmation);
+  if (liveConfirmModal) liveConfirmModal.addEventListener("click", function (event) { if (event.target === liveConfirmModal) closeLiveConfirmation(); });
+
+  $('[data-action="confirm-live-order"]')?.addEventListener("click", async function (button) {
+    var check = $("#live-confirm-check");
+    if (!pendingLiveOrder || !check?.checked) {
+      showToast("Check the real-money risk acknowledgement before placing the order.");
+      return;
+    }
+    if (!liveClient || !liveClient.connected) {
+      closeLiveConfirmation();
+      showToast("Deriv account is no longer connected.");
+      return;
+    }
+    var order = pendingLiveOrder;
+    var maxLoss = Number($("#live-max-loss")?.value || 0);
+    button.currentTarget.disabled = true;
+    try {
+      if (liveRisk + order.stake > maxLoss) throw new Error("The session loss limit was reached.");
+      var result = await liveClient.buy(order);
+      liveRisk += order.stake;
+      closeLiveConfirmation();
+      if (liveClient.balance !== null) $("#live-balance").textContent = formatMoney(liveClient.balance) + " " + (liveClient.currency || "");
+      showToast("Live order placed: " + (result.contractId || "confirmed") + ". Max exposed risk: " + formatMoney(liveRisk) + ".");
+    } catch (error) {
+      showToast(error.message || "Live order was rejected.");
+    } finally {
+      button.currentTarget.disabled = false;
+    }
+  });
+
+  $("#live-mode")?.addEventListener("change", function () {
+    var alert = $("#paper-mode-alert");
+    var button = $("#manual-order-button");
+    if (this.checked) {
+      if (alert) { alert.classList.add("live"); alert.innerHTML = "<strong>Live mode is armed</strong><span>Every order will require a second confirmation and can lose real money.</span>"; }
+      if (button) button.textContent = "Review live order";
+      setLiveStatus("Authorized · live mode armed", true);
+    } else {
+      if (alert) { alert.classList.remove("live"); alert.innerHTML = "<strong>Paper mode is on</strong><span>This order stays in your browser and never reaches a broker.</span>"; }
+      if (button) button.textContent = "Place paper order";
+      if (liveClient?.connected) setLiveStatus("Authorized · live mode off", true);
+    }
   });
 
   $('[data-action="connect-copy"]')?.addEventListener("click", function () {
