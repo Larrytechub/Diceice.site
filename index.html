@@ -66,6 +66,7 @@
         <button class="pm-nav-btn active" data-panel="free-bots">▦&nbsp; Free Bots</button>
         <button class="pm-nav-btn" data-panel="bulk-trader">◈&nbsp; Bulk Trader</button>
         <button class="pm-nav-btn" data-panel="dashboard">⌘&nbsp; Dashboard</button>
+        <button class="pm-nav-btn" data-panel="trading-view">⌁&nbsp; Market View</button>
         <button class="pm-nav-btn" data-panel="bot-builder">♙&nbsp; Bot Builder</button>
       </nav>
       <div class="pm-auth"><button class="pm-auth-btn outline" data-action="login">Log in</button><button class="pm-auth-btn filled" data-action="signup">Sign up</button></div>
@@ -79,16 +80,16 @@
       <button class="pm-feature" data-panel="analysis"><span class="pm-ficon">◎</span> Analysis Tool</button>
       <button class="pm-feature" data-panel="speed-lab"><span class="pm-ficon">ϟ</span> Speed Lab</button>
       <button class="pm-feature" data-panel="bulk-trader"><span class="pm-ficon">◌</span> Olympus Sniper</button>
-      <button class="pm-feature" data-panel="bulk-trader"><span class="pm-ficon">⌁</span> Trading View</button>
-      <button class="pm-feature" data-panel="bot-builder"><span class="pm-ficon">▥</span> Manual DTrader</button>
+      <button class="pm-feature" data-panel="trading-view"><span class="pm-ficon">⌁</span> Trading View</button>
+      <button class="pm-feature" data-panel="manual-dtrader"><span class="pm-ficon">▥</span> Manual DTrader</button>
       <button class="pm-feature" data-panel="tutorials"><span class="pm-ficon">▻</span> Tutorials</button>
-      <button class="pm-feature" data-panel="bulk-trader"><span class="pm-ficon">⟳</span> Copy Trader</button>
+      <button class="pm-feature" data-panel="copy-trader"><span class="pm-ficon">⟳</span> Copy Trader</button>
     </div>
 
     <section class="pm-hero">
-      <span class="pm-badge">Paper trading workspace</span>
+      <span class="pm-badge">Paper trading workspace · source-inspired tools</span>
       <h1>diceice.site</h1>
-      <p>Load a bot and start trading — no setup, no noise.</p>
+      <p>Build, test, and monitor strategies in one focused workspace — safely in paper mode.</p>
     </section>
 
     <section class="pm-panel active" id="panel-free-bots">
@@ -126,13 +127,31 @@
 
     <section class="pm-panel" id="panel-dashboard">
       <div class="pm-section-head"><div><h2>Dashboard</h2><p>Your paper account at a glance.</p></div><button class="pm-filter button-refresh" data-action="refresh">↻ Refresh</button></div>
-      <div class="pm-stats"><div class="pm-stat"><label>Paper balance</label><strong>$10,842.50</strong><span>+4.82% this week</span></div><div class="pm-stat"><label>Active bots</label><strong id="active-bots">3</strong><span>2 running now</span></div><div class="pm-stat"><label>Win rate</label><strong>68.4%</strong><span>+2.1% vs last week</span></div><div class="pm-stat"><label>Net return</label><strong>+$842.50</strong><span>Paper performance</span></div></div>
+      <div class="pm-stats"><div class="pm-stat"><label>Paper balance</label><strong id="paper-balance">$10,842.50</strong><span id="balance-change">+4.82% this week</span></div><div class="pm-stat"><label>Active bots</label><strong id="active-bots">3</strong><span>2 running now</span></div><div class="pm-stat"><label>Win rate</label><strong id="win-rate">68.4%</strong><span id="win-rate-note">+2.1% vs last week</span></div><div class="pm-stat"><label>Net return</label><strong id="net-return">+$842.50</strong><span>Paper performance</span></div></div>
       <div class="pm-dashboard-grid"><div class="pm-surface"><h3>Performance · last 30 days</h3><div class="pm-chart"><svg viewBox="0 0 600 200" preserveAspectRatio="none" aria-label="Performance chart"><defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7399e9" stop-opacity=".35"/><stop offset="1" stop-color="#7399e9" stop-opacity="0"/></linearGradient></defs><path d="M0 163 C35 160 48 137 78 145 S125 110 158 128 S208 101 238 112 S290 83 315 99 S355 78 386 88 S425 44 458 65 S504 28 535 47 S569 21 600 24 L600 200 L0 200Z" fill="url(#area)"/><path d="M0 163 C35 160 48 137 78 145 S125 110 158 128 S208 101 238 112 S290 83 315 99 S355 78 386 88 S425 44 458 65 S504 28 535 47 S569 21 600 24" fill="none" stroke="#4b74cd" stroke-width="3"/></svg></div></div><div class="pm-surface"><h3>Watchlist</h3><div class="pm-watch-row"><span><strong>Volatility 100</strong><small>R_100</small></span><span class="pm-positive">+2.84%</span></div><div class="pm-watch-row"><span><strong>Volatility 75</strong><small>R_75</small></span><span class="pm-positive">+1.20%</span></div><div class="pm-watch-row"><span><strong>Volatility 50</strong><small>R_50</small></span><span style="color:#d16a63;font-weight:800;">-0.44%</span></div><div class="pm-watch-row"><span><strong>Step Index</strong><small>stpRNG</small></span><span class="pm-positive">+0.79%</span></div></div></div>
     </section>
 
     <section class="pm-panel" id="panel-bulk-trader">
       <div class="pm-section-head"><div><h2>Bulk Trader</h2><p>Queue several bots for the same paper run.</p></div><div class="pm-filter"><button class="active">Paper mode</button></div></div>
       <div class="pm-surface"><table class="pm-table"><thead><tr><th><input type="checkbox" id="select-all" /></th><th>BOT</th><th>MARKET</th><th>STAKE</th><th>STATUS</th><th>RETURN</th></tr></thead><tbody><tr><td><input type="checkbox" class="bot-check" /></td><td><strong>Olympian Glory</strong></td><td>Volatility 100</td><td>$25</td><td><span class="pm-status">Ready</span></td><td class="pm-positive">+14.2%</td></tr><tr><td><input type="checkbox" class="bot-check" /></td><td><strong>Concept AI</strong></td><td>Volatility 75</td><td>$20</td><td><span class="pm-status">Ready</span></td><td class="pm-positive">+11.8%</td></tr><tr><td><input type="checkbox" class="bot-check" /></td><td><strong>Tradescript V2</strong></td><td>Step Index</td><td>$15</td><td><span class="pm-status">Ready</span></td><td class="pm-positive">+9.6%</td></tr></tbody></table><button class="pm-create" id="bulk-run" style="margin-top:16px;width:auto;padding:10px 18px;">Run selected bots</button></div>
+    </section>
+
+    <section class="pm-panel" id="panel-trading-view">
+      <div class="pm-section-head"><div><h2>Trading View</h2><p>Read the market pulse before starting a paper run.</p></div><div class="pm-filter"><button class="active" data-timeframe="1m">1m</button><button data-timeframe="5m">5m</button><button data-timeframe="15m">15m</button><button data-action="refresh-market">↻ Refresh</button></div></div>
+      <div class="pm-market-layout">
+        <div class="pm-surface"><div class="pm-chart-title"><span><strong id="market-symbol">Volatility 100 Index</strong><small>R_100 · synthetic index</small></span><span class="pm-positive" id="market-change">+2.84%</span></div><div class="pm-chart pm-large-chart"><svg viewBox="0 0 600 230" preserveAspectRatio="none" aria-label="Simulated market chart"><defs><linearGradient id="market-area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4b74cd" stop-opacity=".28"/><stop offset="1" stop-color="#4b74cd" stop-opacity="0"/></linearGradient></defs><path d="M0 177 C30 185 42 143 76 157 S122 122 154 143 S198 80 233 112 S281 88 310 101 S347 55 377 74 S416 35 448 64 S493 47 520 30 S559 52 600 19 L600 230 L0 230Z" fill="url(#market-area)"/><path d="M0 177 C30 185 42 143 76 157 S122 122 154 143 S198 80 233 112 S281 88 310 101 S347 55 377 74 S416 35 448 64 S493 47 520 30 S559 52 600 19" fill="none" stroke="#4167c7" stroke-width="3"/></svg></div><div class="pm-chart-legend"><span><i class="pm-dot green"></i>Momentum positive</span><span><i class="pm-dot blue"></i>Paper feed · <span id="market-updated">just now</span></span></div></div>
+        <div class="pm-surface"><h3>Market watch</h3><div class="pm-watch-row"><span><strong>Volatility 100</strong><small>R_100</small></span><span class="pm-positive" data-market-change>+2.84%</span></div><div class="pm-watch-row"><span><strong>Volatility 75</strong><small>R_75</small></span><span class="pm-positive" data-market-change>+1.20%</span></div><div class="pm-watch-row"><span><strong>Volatility 50</strong><small>R_50</small></span><span class="pm-negative" data-market-change>-0.44%</span></div><div class="pm-watch-row"><span><strong>Step Index</strong><small>stpRNG</small></span><span class="pm-positive" data-market-change>+0.79%</span></div><div class="pm-signal-box"><span class="pm-status">PAPER SIGNAL</span><strong>Momentum is building</strong><small>Use this read as context, not a prediction.</small></div></div>
+      </div>
+    </section>
+
+    <section class="pm-panel" id="panel-manual-dtrader">
+      <div class="pm-section-head"><div><h2>Manual DTrader</h2><p>Place a simulated contract with a clear risk preview.</p></div><div class="pm-filter"><button class="active">Demo only</button></div></div>
+      <div class="pm-builder"><div class="pm-surface"><div class="pm-paper-alert"><strong>Paper mode is on</strong><span>This order stays in your browser and never reaches a broker.</span></div><div class="pm-field"><label>Market</label><select id="manual-market"><option>Volatility 100 Index</option><option>Volatility 75 Index</option><option>Step Index</option></select></div><div class="pm-field"><label>Contract</label><select id="manual-contract"><option>Higher / Lower</option><option>Even / Odd</option><option>Over / Under</option></select></div><div class="pm-field"><label>Direction</label><div class="pm-choice-row"><button class="pm-choice active" data-direction="BUY">Buy / Higher</button><button class="pm-choice" data-direction="SELL">Sell / Lower</button></div></div><div class="pm-field"><label>Stake</label><input id="manual-stake" type="number" value="10" min="1" step="1" /></div><button class="pm-create" data-action="manual-order">Place paper order</button></div><div class="pm-surface"><h3>Recent paper orders</h3><table class="pm-table"><thead><tr><th>TIME</th><th>MARKET</th><th>SIDE</th><th>STAKE</th><th>RESULT</th></tr></thead><tbody id="paper-orders"><tr><td colspan="5" class="pm-empty">No manual orders yet. Your first paper order will appear here.</td></tr></tbody></table></div></div>
+    </section>
+
+    <section class="pm-panel" id="panel-copy-trader">
+      <div class="pm-section-head"><div><h2>Copy Trader</h2><p>Mirror selected paper strategies without connecting a trading account.</p></div><div class="pm-filter"><button class="active">Local simulation</button></div></div>
+      <div class="pm-copy-grid"><div class="pm-surface"><div class="pm-copy-head"><div><span class="pm-status">AVAILABLE SOURCES</span><h3>Choose what to mirror</h3></div><span class="pm-copy-count" id="copy-count">0 selected</span></div><label class="pm-copy-card"><input type="checkbox" data-copy="Momentum Alpha" /><span><strong>Momentum Alpha</strong><small>Volatility 100 · 72% paper win rate</small></span><em>+18.4%</em></label><label class="pm-copy-card"><input type="checkbox" data-copy="Digit Scout" /><span><strong>Digit Scout</strong><small>Even / Odd · 64% paper win rate</small></span><em>+11.2%</em></label><label class="pm-copy-card"><input type="checkbox" data-copy="Range Runner" /><span><strong>Range Runner</strong><small>Step Index · 61% paper win rate</small></span><em>+8.7%</em></label><button class="pm-create" data-action="connect-copy">Start paper copy session</button></div><div class="pm-surface pm-copy-status"><span class="pm-status">SESSION STATUS</span><strong id="copy-session-status">Not connected</strong><p>Copied orders will be recorded in the same local paper ledger as Manual DTrader.</p><div class="pm-copy-meter"><span id="copy-meter"></span></div><small id="copy-session-note">Select at least one source to begin.</small></div></div>
     </section>
 
     <section class="pm-panel" id="panel-bot-builder">
@@ -144,8 +163,8 @@
     <section class="pm-panel" id="panel-speed-lab"><div class="pm-section-head"><div><h2>Speed Lab</h2><p>Run fast paper experiments with controlled settings.</p></div></div><div class="pm-surface"><h3>Experiment presets</h3><div class="pm-stats"><div class="pm-stat"><label>Scalper sprint</label><strong>5 min</strong><span>High frequency</span></div><div class="pm-stat"><label>Balanced run</label><strong>30 min</strong><span>Recommended</span></div><div class="pm-stat"><label>Deep test</label><strong>4 hrs</strong><span>More samples</span></div></div><button class="pm-create" data-action="speed">Start a paper experiment</button></div></section>
     <section class="pm-panel" id="panel-tutorials"><div class="pm-section-head"><div><h2>Tutorials</h2><p>Get from your first load to a confident paper run.</p></div></div><div class="pm-stats"><div class="pm-stat"><label>01</label><strong>Load a bot</strong><span>Choose a strategy</span></div><div class="pm-stat"><label>02</label><strong>Set a market</strong><span>Pick a contract</span></div><div class="pm-stat"><label>03</label><strong>Run safely</strong><span>Paper mode first</span></div><div class="pm-stat"><label>04</label><strong>Review</strong><span>Learn from results</span></div></div></section>
 
-    <div class="pm-bottom-dock"><button class="pm-run" id="run-toggle"><i>▶</i><span>Run</span></button><div class="pm-execution">EXECUTION<strong>FAST <span class="pm-switch"></span></strong></div><div class="pm-dock-state" id="dock-state">Bot is not running</div></div>
-    <footer class="pm-footer">diceice.site · Paper trading tools for focused practice</footer>
+    <div class="pm-bottom-dock"><button class="pm-run" id="run-toggle"><i>▶</i><span>Run</span></button><div class="pm-execution">EXECUTION<strong>FAST <span class="pm-switch"></span></strong></div><div class="pm-dock-state" id="dock-state">Bot is not running</div><span class="pm-safety">● PAPER MODE</span></div>
+    <footer class="pm-footer">diceice.site · Bot builder, market tools, and paper trading practice</footer>
   </main>
 
   <div class="pm-modal-wrap" id="pm-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="pm-modal"><h3 id="modal-title">Unlock this bot</h3><p id="modal-copy">This protected strategy needs a password before it can be loaded into your paper workspace.</p><div class="pm-field"><label>Password</label><input id="modal-password" type="password" placeholder="Enter password" /></div><div class="pm-modal-actions"><button data-action="close-modal">Cancel</button><button class="primary" id="unlock-bot">Unlock bot</button></div></div></div>
